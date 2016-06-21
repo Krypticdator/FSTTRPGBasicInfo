@@ -1,8 +1,9 @@
 from traits.api import *
 from traitsui.api import *
 
-from db import dbManager
-from random import choice, randint
+from random import randint
+from models import Names
+
 
 
 class BasicInfo(HasTraits):
@@ -15,34 +16,22 @@ class BasicInfo(HasTraits):
     gender = Enum('male', 'female')
     age = Range(14, 80)
     random_age = Button()
+    names = None
 
     def _random_name_fired(self):
-        mgr = dbManager()
         country = self.country
         gender = self.gender
-        country_names = mgr.name_table.get_names_of_country(country)
-        gender_names = []
-        last_names = []
-        for name in country_names:
-            if name.group == 'fname':
-                if name.gender == gender:
-                    gender_names.append(name.name)
-            elif name.group == 'lname':
-                last_names.append(name.name)
-        self.name = choice(gender_names) + " " + choice(last_names)
+        if self.names is None:
+            self.names = Names(country)
+        if self.names.country != self.country:
+            self.names = Names(country)
+
+        self.name = self.names.random_name(gender)
 
     def _random_alias_fired(self):
-        mgr = dbManager()
-        country = 'alias'
-        aliases = mgr.name_table.get_names_of_country(country)
-        last_aliases = []
-        first_aliases = []
-        for name in aliases:
-            if name.group == 'falias':
-                first_aliases.append(name.name)
-            elif name.group == 'lalias':
-                last_aliases.append(name.name)
-        self.alias = choice(first_aliases) + " " + choice(last_aliases)
+        if self.names is None:
+            self.names = Names(self.country)
+        self.alias = self.names.random_alias()
 
     def _random_age_fired(self):
         self.age = 14 + randint(2, 25)
