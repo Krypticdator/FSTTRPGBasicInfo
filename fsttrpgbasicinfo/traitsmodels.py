@@ -3,6 +3,7 @@ from traitsui.api import *
 
 from random import randint
 from models import Names
+import utilities
 
 
 
@@ -17,6 +18,8 @@ class BasicInfo(HasTraits):
     age = Range(14, 80)
     random_age = Button()
     names = None
+    birthday = String()
+    random_birthday = Button()
 
     def _random_name_fired(self):
         country = self.country
@@ -36,6 +39,9 @@ class BasicInfo(HasTraits):
     def _random_age_fired(self):
         self.age = 14 + randint(2, 25)
 
+    def _random_birthday_fired(self):
+        self.birthday = utilities.random_birthday()
+
     traits_view = View(
         Item('character_type'),
         Item('gender'),
@@ -51,6 +57,10 @@ class BasicInfo(HasTraits):
         HGroup(
             Item('age'),
             Item('random_age', show_label=False)
+        ),
+        HGroup(
+            Item('birthday'),
+            Item('random_birthday', show_label=False)
         )
     )
 
