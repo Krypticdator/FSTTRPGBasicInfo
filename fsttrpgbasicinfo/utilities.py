@@ -1,3 +1,4 @@
+from __future__ import print_function
 import requests
 from random import randint
 
@@ -9,6 +10,18 @@ def get_aws_names_group(country):
 
     names = j['response']
     return names
+
+
+def upload_character_to_aws(name, role, gender, country, birthday, age, alias=None):
+    response = requests.post(url="https://eo7sjt6hvj.execute-api.us-west-2.amazonaws.com/prod/characters/create",
+                             json={"name": str(name),
+                                   "role": str(role),
+                                   "gender": str(gender),
+                                   "country": str(country),
+                                   "birthday": str(birthday),
+                                   "age": str(age),
+                                   "alias": str(alias)})
+    print('upload complete')
 
 
 def random_birthday():

@@ -8,7 +8,7 @@ import utilities
 
 
 class BasicInfo(HasTraits):
-    character_type = Enum('PC', 'INPC', 'NPC', )
+    character_type = Enum('NPC', 'PC', 'INPC')
     country = Enum('us')
     name = String()
     random_name = Button()
@@ -20,6 +20,7 @@ class BasicInfo(HasTraits):
     names = None
     birthday = String()
     random_birthday = Button()
+    upload = Button()
 
     def _random_name_fired(self):
         country = self.country
@@ -42,6 +43,10 @@ class BasicInfo(HasTraits):
     def _random_birthday_fired(self):
         self.birthday = utilities.random_birthday()
 
+    def _upload_fired(self):
+        utilities.upload_character_to_aws(name=self.name, role=self.character_type, gender=self.gender,
+                                          country=self.country, birthday=self.birthday, age=self.age, alias=self.alias)
+
     traits_view = View(
         Item('character_type'),
         Item('gender'),
@@ -61,7 +66,8 @@ class BasicInfo(HasTraits):
         HGroup(
             Item('birthday'),
             Item('random_birthday', show_label=False)
-        )
+        ),
+        Item('upload', show_label=False)
     )
 
 
