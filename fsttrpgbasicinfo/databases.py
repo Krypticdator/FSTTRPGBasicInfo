@@ -38,10 +38,10 @@ class Names(Model):
         return Names.select().where(Names.country == country)
 
     @staticmethod
-    def delete_country(self, country):
+    def delete_country(country):
         query = Names.delete().where(Names.country == country)
         return query
-    
+
     class Meta:
         database = namedb
 
