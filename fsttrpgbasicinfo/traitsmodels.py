@@ -3,14 +3,17 @@ from traitsui.api import *
 
 from random import randint
 from models import Names
+from fsttrpgcharloader.traitsmodels import CharacterName
 import utilities
 
 
+class ConfigureNames(HasTraits):
+    check_aws_for_names = Bool(default_value=False)
 
 class BasicInfo(HasTraits):
-    character_type = Enum('NPC', 'PC', 'INPC')
+    configure_names = Instance(ConfigureNames, ())
+    character_name = Instance(CharacterName, ())
     country = Enum('us')
-    name = String()
     random_name = Button()
     alias = String
     random_alias = Button()
@@ -26,11 +29,11 @@ class BasicInfo(HasTraits):
         country = self.country
         gender = self.gender
         if self.names is None:
-            self.names = Names(country)
+            self.names = Names(country, self.configure_names.check_aws_for_names)
         if self.names.country != self.country:
             self.names = Names(country)
 
-        self.name = self.names.random_name(gender)
+        self.character_name.name.name = self.names.random_name(gender)
 
     def _random_alias_fired(self):
         if self.names is None:
@@ -48,13 +51,16 @@ class BasicInfo(HasTraits):
                                           country=self.country, birthday=self.birthday, age=self.age, alias=self.alias)
 
     traits_view = View(
-        Item('character_type'),
-        Item('gender'),
-        Item('country'),
+        Item('configure_names', show_label=False),
         HGroup(
-            Item('name'),
+            Item('gender'),
+            Item('country')
+        ),
+        HGroup(
+            Item('character_name', style='custom', show_label=False),
             Item('random_name', show_label=False)
         ),
+
         HGroup(
             Item('alias'),
             Item('random_alias', show_label=False)

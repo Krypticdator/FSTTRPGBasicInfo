@@ -1,24 +1,25 @@
-from db import dbManager
+from databases import DBManager
 from random import choice
 
 
 class Names(object):
-    def __init__(self, country):
+    def __init__(self, country, check_aws):
         super(Names, self).__init__()
         self.country = country
+        self.check_aws = check_aws
         self.female_names = []
         self.male_names = []
         self.last_names = []
         self.faliases = []
         self.laliases = []
 
-        self.load_names(country)
+        self.load_names(country, check_aws)
         self.load_aliases()
 
-    def load_names(self, country):
-        mgr = dbManager()
+    def load_names(self, country, check_aws):
+        mgr = DBManager()
 
-        country_names = mgr.name_table.get_names_of_country(country)
+        country_names = mgr.names_table.get_names_of_country(country, check_aws=check_aws)
 
         for name in country_names:
             if name.group == 'fname':
@@ -30,9 +31,9 @@ class Names(object):
                 self.last_names.append(name.name)
 
     def load_aliases(self):
-        mgr = dbManager()
+        mgr = DBManager()
         country = 'alias'
-        aliases = mgr.name_table.get_names_of_country(country)
+        aliases = mgr.names_table.get_names_of_country(country, check_aws=self.check_aws)
 
         for name in aliases:
             if name.group == 'falias':

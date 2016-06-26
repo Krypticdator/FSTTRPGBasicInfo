@@ -1,4 +1,5 @@
-sqlalchemy
 requests
 traits
 traitsui
+peewee
+-e git+https://github.com/Krypticdator/FSTTRPGCharacterLoader.git#egg=FSTTRPGCharacterLoader
