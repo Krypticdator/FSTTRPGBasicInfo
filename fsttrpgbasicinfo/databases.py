@@ -12,7 +12,8 @@ class Names(Model):
     group = CharField()
     gender = CharField()
 
-    def add_name(self, name, country, group, gender):
+    @staticmethod
+    def add_name(name, country, group, gender):
         new_name, created = Names.get_or_create(name=name,
                                                 defaults={'country': country,
                                                           'group': group,
@@ -20,7 +21,8 @@ class Names(Model):
         if created:
             print('already created')
 
-    def add_many(self, list_of_names):
+    @staticmethod
+    def add_many(list_of_names):
         with namedb.atomic():
             for index in range(0, len(list_of_names), 500):
                 print('adding indexes: ' + str(index) + " - " + str(index + 500))
@@ -35,9 +37,11 @@ class Names(Model):
                 self.add_many(aws_names)
         return Names.select().where(Names.country == country)
 
+    @staticmethod
     def delete_country(self, country):
         query = Names.delete().where(Names.country == country)
-
+        return query
+    
     class Meta:
         database = namedb
 
