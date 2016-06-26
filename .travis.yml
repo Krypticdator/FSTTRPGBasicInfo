@@ -1,7 +1,3 @@
-addons:
-    code_climate:
-        repo_token: a4df459891a615a07793a8bb6773fa0a144c9f689d1fd038e073e14a073354a1
-
 language: python
 python:
 - "2.7"
@@ -13,4 +9,6 @@ install:
 # command to run tests
 script:
   - python test_fsttrpgbasicinfo.py
+
+
 
