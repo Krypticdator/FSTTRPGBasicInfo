@@ -6,6 +6,7 @@ python:
 install:
   - travis_wait 40 pip install -r requirements.txt
   - pip install coverage
+  - pip install codeclimate-test-reporter
 
 # command to run tests
 script:
@@ -13,7 +14,7 @@ script:
 
 after_success:
     coverage run -m fsttrpgbasicinfo
-    pip install codeclimate-test-reporter
+
 
 
 
