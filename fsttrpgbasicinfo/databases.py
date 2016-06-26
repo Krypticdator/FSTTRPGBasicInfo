@@ -35,6 +35,9 @@ class Names(Model):
                 self.add_many(aws_names)
         return Names.select().where(Names.country == country)
 
+    def delete_country(self, country):
+        query = Names.delete().where(Names.country == country)
+
     class Meta:
         database = namedb
 

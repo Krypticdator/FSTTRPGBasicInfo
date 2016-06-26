@@ -24,11 +24,14 @@ class Names(object):
         for name in country_names:
             if name.group == 'fname':
                 if name.gender == 'male':
-                    self.male_names.append(name.name)
+                    if name.name not in self.male_names:
+                        self.male_names.append(name.name)
                 elif name.gender == 'female':
-                    self.female_names.append(name.name)
+                    if name.name not in self.female_names:
+                        self.female_names.append(name.name)
             elif name.group == 'lname':
-                self.last_names.append(name.name)
+                if name.name not in self.last_names:
+                    self.last_names.append(name.name)
             elif name.group == 'falias':
                 self.faliases.append(name.name)
             elif name.group == 'lalias':

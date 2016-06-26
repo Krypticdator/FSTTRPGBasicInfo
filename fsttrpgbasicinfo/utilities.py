@@ -22,6 +22,7 @@ def upload_character_to_aws(name, role, gender, country, birthday, age, alias=No
                                    "age": str(age),
                                    "alias": str(alias)})
     print('upload complete')
+    return response.json()
 
 
 def random_birthday():
