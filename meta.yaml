@@ -1,9 +1,9 @@
 package:
   name: fsttrpgbasicinfo
-  version: 0.1.1
+  version: 0.1.2
 
 build:
- number: 2
+ number: 3
  string: alpha
 
 source:
