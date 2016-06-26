@@ -47,7 +47,8 @@ class BasicInfo(HasTraits):
         self.birthday = utilities.random_birthday()
 
     def _upload_fired(self):
-        utilities.upload_character_to_aws(name=self.name, role=self.character_type, gender=self.gender,
+        utilities.upload_character_to_aws(name=self.character_name.name.name, role=self.character_name.role,
+                                          gender=self.gender,
                                           country=self.country, birthday=self.birthday, age=self.age, alias=self.alias)
 
     traits_view = View(

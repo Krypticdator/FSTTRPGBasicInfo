@@ -55,6 +55,11 @@ class Actor(Model):
                                                        'birthday': birthday,
                                                        'alias': alias,
                                                        'age': int(age)})
+        if created:
+            print('added new character to Actor database')
+            return None
+        else:
+            return actor
 
     class Meta:
         database = characterdb

@@ -30,7 +30,7 @@ class Names(object):
             elif name.group == 'lname':
                 self.last_names.append(name.name)
             elif name.group == 'falias':
-                self.faliases.append(self.name)
+                self.faliases.append(name.name)
             elif name.group == 'lalias':
                 self.laliases.append(name.name)
 
