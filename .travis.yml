@@ -11,9 +11,10 @@ install:
 # command to run tests
 script:
   - python test_fsttrpgbasicinfo.py
-
+  - coverage run test_fsttrpgbasicinfo.py
+  
 after_success:
-    coverage run -m fsttrpgbasicinfo
+    codeclimate-test_reporter
 
 
 
