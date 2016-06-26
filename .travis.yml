@@ -1,6 +1,6 @@
 language: python
 python:
-- "2.7"
+  - "2.7"
 
 # command to install dependencies
 install:
@@ -12,9 +12,9 @@ install:
 script:
   - python test_fsttrpgbasicinfo.py
   - coverage run test_fsttrpgbasicinfo.py
-  
+
 after_success:
-    codeclimate-test_reporter
+  - codeclimate-test_reporter
 
 
 
