@@ -14,7 +14,7 @@ class Names(object):
         self.laliases = []
 
         self.load_names(country, check_aws)
-        self.load_aliases()
+        self.load_names('alias', check_aws)
 
     def load_names(self, country, check_aws):
         mgr = DBManager()
@@ -29,15 +29,8 @@ class Names(object):
                     self.female_names.append(name.name)
             elif name.group == 'lname':
                 self.last_names.append(name.name)
-
-    def load_aliases(self):
-        mgr = DBManager()
-        country = 'alias'
-        aliases = mgr.names_table.get_names_of_country(country, check_aws=self.check_aws)
-
-        for name in aliases:
-            if name.group == 'falias':
-                self.faliases.append(name.name)
+            elif name.group == 'falias':
+                self.faliases.append(self.name)
             elif name.group == 'lalias':
                 self.laliases.append(name.name)
 
