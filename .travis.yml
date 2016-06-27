@@ -11,7 +11,7 @@ install:
 # command to run tests
 script:
   - python test_fsttrpgbasicinfo.py
-  - coverage run test_fsttrpgbasicinfo.py
+  - coverage run --source fsttrpgbasicinfo setup.py test
 
 after_success:
   - coveralls
