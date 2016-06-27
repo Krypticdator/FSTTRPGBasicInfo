@@ -12,7 +12,7 @@ setup(
     install_requires=[
         'traits',
         'traitsui',
-        'sqlalchemy',
+        'peewee',
         'requests'
     ]
 )
