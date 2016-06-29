@@ -1,6 +1,6 @@
 package:
   name: fsttrpgbasicinfo
-  version: 0.1.4
+  version: 0.1.5
 
 build:
  number: 3

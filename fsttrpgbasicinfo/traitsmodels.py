@@ -12,7 +12,7 @@ class ConfigureNames(HasTraits):
 
 class BasicInfo(HasTraits):
     configure_names = Instance(ConfigureNames, ())
-    character_name = Instance(CharacterName, ())
+    character_name = Instance(CharacterName)
     country = Enum('us')
     random_name = Button()
     alias = String
@@ -24,6 +24,9 @@ class BasicInfo(HasTraits):
     birthday = String()
     random_birthday = Button()
     upload = Button()
+
+    def _character_name_default(self):
+        return CharacterName(name_change_handler=self.load_info)
 
     def _random_name_fired(self):
         country = self.country
@@ -45,6 +48,9 @@ class BasicInfo(HasTraits):
 
     def _random_birthday_fired(self):
         self.birthday = utilities.random_birthday()
+
+    def load_info(self):
+        print('not implemented')
 
     def _upload_fired(self):
         utilities.upload_character_to_aws(name=self.character_name.name.name, role=self.character_name.role,
