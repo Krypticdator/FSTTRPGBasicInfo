@@ -27,9 +27,9 @@ class Names(Model):
     @staticmethod
     def add_many(list_of_names):
         with namedb.atomic():
-            for index in range(0, len(list_of_names), 250):
-                print('adding indexes: ' + str(index) + " - " + str(index + 250))
-                Names.insert_many(list_of_names[index:index + 250]).execute()
+            for index in range(0, len(list_of_names), 100):
+                print('adding indexes: ' + str(index) + " - " + str(index + 100))
+                Names.insert_many(list_of_names[index:index + 100]).execute()
 
     def get_names_of_country(self, country, check_aws):
         country_names = Names.select().where(Names.country == country)
