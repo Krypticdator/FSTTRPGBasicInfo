@@ -4,6 +4,7 @@ from traitsui.api import *
 from random import randint
 from models import Names
 from fsttrpgcharloader.traitsmodels import CharacterName
+from databases import DBManager
 import utilities
 
 
@@ -23,7 +24,8 @@ class BasicInfo(HasTraits):
     names = None
     birthday = String()
     random_birthday = Button()
-    upload = Button()
+
+    random_all = Button()
 
     def _character_name_default(self):
         return CharacterName(name_change_handler=self.load_info)
@@ -49,13 +51,28 @@ class BasicInfo(HasTraits):
     def _random_birthday_fired(self):
         self.birthday = utilities.random_birthday()
 
+    def _random_all_fired(self):
+        random_gender = randint(1, 2)
+        if random_gender == 1:
+            self.gender = 'male'
+        else:
+            self.gender = 'female'
+
+        self._random_age_fired()
+        self._random_name_fired()
+        self._random_alias_fired()
+        self._random_birthday_fired()
+
     def load_info(self):
         print('not implemented')
 
-    def _upload_fired(self):
-        utilities.upload_character_to_aws(name=self.character_name.name.name, role=self.character_name.role,
-                                          gender=self.gender,
-                                          country=self.country, birthday=self.birthday, age=self.age, alias=self.alias)
+    def save(self):
+        db_mgr = DBManager()
+        db_mgr.actors_table.add_actor(name=self.character_name.get_name(), role=self.character_name.role,
+                                      gender=self.gender, country=self.country, birthday=self.birthday,
+                                      alias=self.alias, age=self.age)
+
+
 
     traits_view = View(
         Item('configure_names', show_label=False),
@@ -80,10 +97,32 @@ class BasicInfo(HasTraits):
             Item('birthday'),
             Item('random_birthday', show_label=False)
         ),
-        Item('upload', show_label=False)
+        Item('random_all', show_label=False)
+    )
+
+
+class Standalone(HasTraits):
+    basic_info = Instance(BasicInfo, ())
+    upload = Button()
+    save = Button()
+
+    def _upload_fired(self):
+        utilities.upload_character_to_aws(name=self.basic_info.character_name.name.name,
+                                          role=self.basic_info.character_name.role,
+                                          gender=self.basic_info.gender,
+                                          country=self.basic_info.country, birthday=self.basic_info.birthday,
+                                          age=self.basic_info.age, alias=self.basic_info.alias)
+
+    def _save_fired(self):
+        self.basic_info.save()
+
+    view = View(
+        Item('basic_info', style='custom'),
+        Item('upload', show_label=False),
+        Item('save', show_label=False)
     )
 
 
 if __name__ == '__main__':
-    b = BasicInfo()
+    b = Standalone()
     b.configure_traits()

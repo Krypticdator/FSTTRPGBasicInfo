@@ -1,9 +1,10 @@
 from __future__ import print_function
-from peewee import *
+from peewee import Model, CharField, SqliteDatabase, IntegerField, ForeignKeyField
+from fsttrpgcharloader.database import Actor, DBManager as ActorDBManager
 import utilities
 
 namedb = SqliteDatabase('names.db')
-characterdb = SqliteDatabase('actors.db')
+characterdb = SqliteDatabase('basic_info.db')
 
 
 class Names(Model):
@@ -46,9 +47,8 @@ class Names(Model):
         database = namedb
 
 
-class Actor(Model):
-    name = CharField()
-    role = CharField()
+class BasicInfo(Model):
+    actor = ForeignKeyField(rel_model=Actor, related_name='basics')
     gender = CharField()
     country = CharField()
     birthday = CharField()
@@ -56,14 +56,15 @@ class Actor(Model):
     age = IntegerField()
 
     def add_actor(self, name, role, gender, country, birthday, alias, age):
-        actor, created = Actor.get_or_create(name=name, role=role,
-                                             defaults={'gender': gender,
+        act = Actor.add_or_get(role=role, name=name)
+        actor, created = BasicInfo.get_or_create(actor=act,
+                                                 defaults={'gender': gender,
                                                        'country': country,
                                                        'birthday': birthday,
                                                        'alias': alias,
                                                        'age': int(age)})
         if created:
-            print('added new character to Actor database')
+            print('added new character to BasicInfo database')
             return None
         else:
             return actor
@@ -75,12 +76,13 @@ class Actor(Model):
 class DBManager(object):
     def __init__(self):
         super(DBManager, self).__init__()
+        self.actors_db_mgr = ActorDBManager()
         namedb.connect()
         characterdb.connect()
         namedb.create_tables([Names], True)
-        characterdb.create_tables([Actor], True)
+        characterdb.create_tables([BasicInfo], True)
         self.names_table = Names()
-        self.actors_table = Actor()
+        self.actors_table = BasicInfo()
 
     def __del__(self):
         namedb.close()
