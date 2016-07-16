@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='FSTTRPGCharacterBasicInfo',
-    version='0.1.7',
+    version='0.1.8',
     packages=['fsttrpgbasicinfo'],
     url='',
     license='',

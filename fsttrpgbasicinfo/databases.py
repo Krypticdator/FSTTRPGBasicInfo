@@ -1,6 +1,8 @@
 from __future__ import print_function
-from peewee import Model, CharField, SqliteDatabase, IntegerField, ForeignKeyField
+
 from fsttrpgcharloader.database import Actor, DBManager as ActorDBManager
+from peewee import Model, CharField, SqliteDatabase, IntegerField, ForeignKeyField
+
 import utilities
 
 namedb = SqliteDatabase('names.db')
@@ -25,9 +27,9 @@ class Names(Model):
     @staticmethod
     def add_many(list_of_names):
         with namedb.atomic():
-            for index in range(0, len(list_of_names), 500):
-                print('adding indexes: ' + str(index) + " - " + str(index + 500))
-                Names.insert_many(list_of_names[index:index + 500]).execute()
+            for index in range(0, len(list_of_names), 250):
+                print('adding indexes: ' + str(index) + " - " + str(index + 250))
+                Names.insert_many(list_of_names[index:index + 250]).execute()
 
     def get_names_of_country(self, country, check_aws):
         country_names = Names.select().where(Names.country == country)
