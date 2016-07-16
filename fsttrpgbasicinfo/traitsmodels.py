@@ -1,11 +1,12 @@
-from traits.api import *
-from traitsui.api import *
-
 from random import randint
-from models import Names
+
 from fsttrpgcharloader.traitsmodels import CharacterName
-from databases import DBManager
+from traits.api import HasTraits, Instance, Bool, Enum, String, Button, Range
+from traitsui.api import Item, View, HGroup
+
 import utilities
+from databases import DBManager
+from models import Names
 
 
 class ConfigureNames(HasTraits):
@@ -19,7 +20,7 @@ class BasicInfo(HasTraits):
     alias = String
     random_alias = Button()
     gender = Enum('male', 'female')
-    age = Range(14, 80)
+    age = Range(14, 80, mode='spinner')
     random_age = Button()
     names = None
     birthday = String()
@@ -42,7 +43,7 @@ class BasicInfo(HasTraits):
 
     def _random_alias_fired(self):
         if self.names is None:
-            self.names = Names(self.country)
+            self.names = Names(self.country, self.configure_names.check_aws_for_names)
         self.alias = self.names.random_alias()
 
     def _random_age_fired(self):
@@ -75,29 +76,28 @@ class BasicInfo(HasTraits):
 
 
     traits_view = View(
-        Item('configure_names', show_label=False),
+        Item('configure_names', show_label=False, style='custom'),
         HGroup(
             Item('gender'),
             Item('country')
         ),
         HGroup(
-            Item('character_name', style='custom', show_label=False),
-            Item('random_name', show_label=False)
+            Item('character_name', style='custom', show_label=False)
         ),
 
         HGroup(
             Item('alias'),
-            Item('random_alias', show_label=False)
-        ),
-        HGroup(
             Item('age'),
-            Item('random_age', show_label=False)
+            Item('birthday'),
         ),
         HGroup(
-            Item('birthday'),
+            Item('random_all', show_label=False),
+            Item('random_name', show_label=False),
+            Item('random_alias', show_label=False),
+            Item('random_age', show_label=False),
             Item('random_birthday', show_label=False)
-        ),
-        Item('random_all', show_label=False)
+        )
+
     )
 
 
@@ -117,7 +117,7 @@ class Standalone(HasTraits):
         self.basic_info.save()
 
     view = View(
-        Item('basic_info', style='custom'),
+        Item('basic_info', style='custom', show_label=False),
         Item('upload', show_label=False),
         Item('save', show_label=False)
     )
