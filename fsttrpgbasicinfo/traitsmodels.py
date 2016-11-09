@@ -2,12 +2,47 @@ from random import randint
 
 from fsttrpgcharloader.traitsmodels import CharacterName
 from traits.api import HasTraits, Instance, Bool, Enum, String, Button, Range
-from traitsui.api import Item, View, HGroup
+from traitsui.api import Item, View, HGroup, Handler, Action, OKButton, MenuBar, Menu
 
 import utilities
 from databases import DBManager
 from models import Names
 
+
+class BasicInfoHandler(Handler):
+    def do_upload(self, UIInfo):
+        utilities.upload_character_to_aws(name=self.basic_info.character_name.name.name,
+                                          role=self.basic_info.character_name.role,
+                                          gender=self.basic_info.gender,
+                                          country=self.basic_info.country, birthday=self.basic_info.birthday,
+                                          age=self.basic_info.age, alias=self.basic_info.alias)
+
+    def do_save(self, UIInfo):
+        UIInfo.object.basic_info.save()
+
+    def do_random_alias(self, UIInfo):
+        UIInfo.object.basic_info._random_alias_fired()
+
+    def do_random_name(self, UIInfo):
+        UIInfo.object.basic_info._random_name_fired()
+
+    def do_random_age(self, UIInfo):
+        UIInfo.object.basic_info._random_age_fired()
+
+    def do_random_birthday(self, UIInfo):
+        UIInfo.object.basic_info._random_birthday_fired()
+
+    def do_random_all(self, UIInfo):
+        UIInfo.object.basic_info._random_all_fired()
+
+
+action_upload = Action(name="Upload", action="do_upload")
+action_save = Action(name="Save", action='do_save')
+action_random_name = Action(name="Random name", action="do_random_name")
+action_random_alias = Action(name="Random alias", action="do_random_alias")
+action_random_age = Action(name="Random age", action="do_random_age")
+action_random_birthday = Action(name="Random birthday", action="do_random_birthday")
+action_random_all = Action(name="Random all", action="do_random_all")
 
 class ConfigureNames(HasTraits):
     check_aws_for_names = Bool(default_value=False)
@@ -77,25 +112,19 @@ class BasicInfo(HasTraits):
 
     traits_view = View(
         Item('configure_names', show_label=False, style='custom'),
-        HGroup(
-            Item('gender'),
-            Item('country')
-        ),
+
         HGroup(
             Item('character_name', style='custom', show_label=False)
         ),
-
         HGroup(
-            Item('alias'),
+            Item('gender'),
+            Item('country'),
             Item('age'),
             Item('birthday'),
         ),
         HGroup(
-            Item('random_all', show_label=False),
-            Item('random_name', show_label=False),
-            Item('random_alias', show_label=False),
-            Item('random_age', show_label=False),
-            Item('random_birthday', show_label=False)
+            Item('alias'),
+
         )
 
     )
@@ -104,7 +133,6 @@ class BasicInfo(HasTraits):
 class Standalone(HasTraits):
     basic_info = Instance(BasicInfo, ())
     upload = Button()
-    save = Button()
 
     def _upload_fired(self):
         utilities.upload_character_to_aws(name=self.basic_info.character_name.name.name,
@@ -113,16 +141,18 @@ class Standalone(HasTraits):
                                           country=self.basic_info.country, birthday=self.basic_info.birthday,
                                           age=self.basic_info.age, alias=self.basic_info.alias)
 
-    def _save_fired(self):
-        self.basic_info.save()
 
     view = View(
         Item('basic_info', style='custom', show_label=False),
-        Item('upload', show_label=False),
-        Item('save', show_label=False)
+        menubar=MenuBar(Menu(action_upload, action_save, name='File')),
+        # Item('upload', show_label=False),
+        handler=BasicInfoHandler(),
+        buttons=[OKButton, action_random_all, action_random_name, action_random_alias, action_random_age,
+                 action_random_birthday]
     )
 
 
 if __name__ == '__main__':
     b = Standalone()
     b.configure_traits()
+    # b.edit_traits()
