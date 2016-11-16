@@ -69,14 +69,14 @@ class BasicInfo(object):
         if self.gender is None:
             return None
         if self.country is not None:
-            names = Names(check_aws=check_from_aws)
+            names = Names(country=self.country, check_aws=check_from_aws)
             self.name = names.random_name(self.gender)
             return self.name
         else:
             return None
 
     def random_alias(self):
-        n = Names()
+        n = Names(self.country, check_aws=False)
         self.alias = n.random_alias()
         return self.alias
 

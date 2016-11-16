@@ -1,7 +1,7 @@
 from random import randint
 
 from fsttrpgcharloader.traitsmodels import CharacterName
-from traits.api import HasTraits, Instance, Bool, Enum, String, Button, Range
+from traits.api import HasTraits, Instance, Bool, Enum, String, Button, Range, TraitError
 from traitsui.api import Item, View, HGroup, Handler, Action, OKButton, MenuBar, Menu
 
 import utilities
@@ -26,19 +26,29 @@ class BasicInfoHandler(Handler):
         UIInfo.object.basic_info.load()
 
     def do_random_alias(self, UIInfo):
-        UIInfo.object.basic_info._random_alias_fired()
+        # UIInfo.object.basic_info._random_alias_fired()
+        mbi.random_alias()
+        UIInfo.object.basic_info.update_from_model()
 
     def do_random_name(self, UIInfo):
-        UIInfo.object.basic_info._random_name_fired()
+        # UIInfo.object.basic_info._random_name_fired()
+        mbi.random_name()
+        UIInfo.object.basic_info.update_from_model()
 
     def do_random_age(self, UIInfo):
-        UIInfo.object.basic_info._random_age_fired()
+        # UIInfo.object.basic_info._random_age_fired()
+        mbi.random_age()
+        UIInfo.object.basic_info.update_from_model()
 
     def do_random_birthday(self, UIInfo):
-        UIInfo.object.basic_info._random_birthday_fired()
+        # UIInfo.object.basic_info._random_birthday_fired()
+        mbi.random_dob()
+        UIInfo.object.basic_info.update_from_model()
 
     def do_random_all(self, UIInfo):
-        UIInfo.object.basic_info._random_all_fired()
+        # UIInfo.object.basic_info._random_all_fired()
+        mbi.random_all()
+        UIInfo.object.basic_info.update_from_model()
 
 
 action_upload = Action(name="Upload", action="do_upload")
@@ -129,12 +139,28 @@ class BasicInfo(HasTraits):
                                     gender=self.gender, country=self.country, birthday=self.birthday,
                                     alias=self.alias, age=self.age)
 
+
     def update_from_model(self):
-        self.character_name.name.name = mbi.name
-        self.alias = mbi.alias
-        self.gender = mbi.gender
-        self.birthday = mbi.dob
-        self.age = mbi.age
+        try:
+            self.character_name.name.name = mbi.name
+        except TraitError as e:
+            print(e)
+        try:
+            self.alias = mbi.alias
+        except TraitError as e:
+            print(e)
+        try:
+            self.gender = mbi.gender
+        except TraitError as e:
+            print(e)
+        try:
+            self.birthday = mbi.dob
+        except TraitError as e:
+            print(e)
+        try:
+            self.age = mbi.age
+        except TraitError as e:
+            print(e)
 
     def load(self):
         self.update_from_model()
