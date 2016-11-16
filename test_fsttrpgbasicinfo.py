@@ -1,14 +1,22 @@
+import os
 import unittest
-import peewee
-from fsttrpgbasicinfo.models import Names
-from fsttrpgbasicinfo.databases import DBManager
+
 import fsttrpgbasicinfo.utilities
+from fsttrpgbasicinfo.databases import DBManager
+from fsttrpgbasicinfo.models import Names, BasicInfo as ModelBasicInfo
 from fsttrpgbasicinfo.traitsmodels import ConfigureNames, BasicInfo
 
 
 class TestModel(unittest.TestCase):
     def setUp(self):
         pass
+
+    def tearDown(self):
+        try:
+            os.remove('names.db')
+            os.remove('actors.db')
+        except WindowsError as e:
+            print('failed to delete: ' + str(e))
 
     def test_load_names_aws_true_no_doubles(self):
         '''Names table should not store double values of same name'''
@@ -24,8 +32,25 @@ class TestModel(unittest.TestCase):
         random = names.random_name('male')
         self.assertEqual(random, 'test01 test03')
 
+    def test_save_and_load(self):
+        bi = ModelBasicInfo(name='Toni Nurmi', gender='male', dob='11.1', age=27, country='us', alias='mad doc')
+        bi.save('Toni Nurmi', role='pc')
+        bi.load('Toni Nurmi', role='pc')
+        self.assertEqual(bi.name, 'Toni Nurmi')
+        self.assertEqual(bi.gender, 'male')
+        self.assertEqual(bi.dob, '11.1')
+        self.assertEqual(bi.age, 27)
+        self.assertEqual(bi.alias, 'mad doc')
+
 
 class TestUtilities(unittest.TestCase):
+    def tearDown(self):
+        try:
+            os.remove('names.db')
+            os.remove('actors.db')
+        except WindowsError as e:
+            print('failed to delete: ' + str(e))
+
     def test_upload(self):
         response = fsttrpgbasicinfo.utilities.upload_character_to_aws(name='test', role='test', gender='male',
                                                                       country='us',
@@ -38,6 +63,16 @@ class TestUtilities(unittest.TestCase):
 
 
 class TestTraits(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        try:
+            os.remove('names.db')
+            os.remove('actors.db')
+        except WindowsError as e:
+            print('failed to delete: ' + str(e))
+
     def test_configure_names(self):
         con = ConfigureNames()
         self.assertTrue(True)

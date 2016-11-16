@@ -6,8 +6,9 @@ from traitsui.api import Item, View, HGroup, Handler, Action, OKButton, MenuBar,
 
 import utilities
 from databases import DBManager
-from models import Names
+from models import Names, BasicInfo as ModelBasicInfo
 
+mbi = ModelBasicInfo(name=None, gender='male', dob=None, age=None, country='us')
 
 class BasicInfoHandler(Handler):
     def do_upload(self, UIInfo):
@@ -19,6 +20,10 @@ class BasicInfoHandler(Handler):
 
     def do_save(self, UIInfo):
         UIInfo.object.basic_info.save()
+
+    def do_load(self, UIInfo):
+        mbi.load(UIInfo.object.basic_info.character_name.get_name(), UIInfo.object.basic_info.character_name.role)
+        UIInfo.object.basic_info.load()
 
     def do_random_alias(self, UIInfo):
         UIInfo.object.basic_info._random_alias_fired()
@@ -38,6 +43,7 @@ class BasicInfoHandler(Handler):
 
 action_upload = Action(name="Upload", action="do_upload")
 action_save = Action(name="Save", action='do_save')
+action_load = Action(name="Load", action='do_load')
 action_random_name = Action(name="Random name", action="do_random_name")
 action_random_alias = Action(name="Random alias", action="do_random_alias")
 action_random_age = Action(name="Random age", action="do_random_age")
@@ -62,6 +68,21 @@ class BasicInfo(HasTraits):
     random_birthday = Button()
 
     random_all = Button()
+
+    def _country_changed(self):
+        mbi.country = self.country
+
+    def _alias_changed(self):
+        mbi.alias = self.alias
+
+    def _gender_changed(self):
+        mbi.gender = self.gender
+
+    def _age_changed(self):
+        mbi.age = self.age
+
+    def _birthday_changed(self):
+        mbi.dob = self.birthday
 
     def _character_name_default(self):
         return CharacterName(name_change_handler=self.load_info)
@@ -100,14 +121,23 @@ class BasicInfo(HasTraits):
         self._random_birthday_fired()
 
     def load_info(self):
-        print('not implemented')
+        mbi.name = self.character_name.get_name()
 
     def save(self):
         db_mgr = DBManager()
-        db_mgr.actors_table.add_actor(name=self.character_name.get_name(), role=self.character_name.role,
-                                      gender=self.gender, country=self.country, birthday=self.birthday,
-                                      alias=self.alias, age=self.age)
+        db_mgr.basic_info.add_actor(name=self.character_name.get_name(), role=self.character_name.role,
+                                    gender=self.gender, country=self.country, birthday=self.birthday,
+                                    alias=self.alias, age=self.age)
 
+    def update_from_model(self):
+        self.character_name.name.name = mbi.name
+        self.alias = mbi.alias
+        self.gender = mbi.gender
+        self.birthday = mbi.dob
+        self.age = mbi.age
+
+    def load(self):
+        self.update_from_model()
 
 
     traits_view = View(
@@ -144,7 +174,7 @@ class Standalone(HasTraits):
 
     view = View(
         Item('basic_info', style='custom', show_label=False),
-        menubar=MenuBar(Menu(action_upload, action_save, name='File')),
+        menubar=MenuBar(Menu(action_upload, action_save, action_load, name='File')),
         # Item('upload', show_label=False),
         handler=BasicInfoHandler(),
         buttons=[OKButton, action_random_all, action_random_name, action_random_alias, action_random_age,

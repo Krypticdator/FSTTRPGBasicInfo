@@ -59,6 +59,7 @@ class BasicInfo(Model):
 
     def add_actor(self, name, role, gender, country, birthday, alias, age):
         act = Actor.add_or_get(role=role, name=name)
+        print('birthday at save: ' + birthday)
         actor, created = BasicInfo.get_or_create(actor=act,
                                                  defaults={'gender': gender,
                                                        'country': country,
@@ -70,6 +71,12 @@ class BasicInfo(Model):
             return None
         else:
             return actor
+
+    def get_basic_info(self, name, role):
+        act = Actor.get(Actor.name == name, Actor.role == role)
+        bi = BasicInfo.get(BasicInfo.actor == act)
+        print('birthday at load: ' + bi.birthday)
+        return bi
 
     class Meta:
         database = characterdb
@@ -84,7 +91,7 @@ class DBManager(object):
         namedb.create_tables([Names], True)
         characterdb.create_tables([BasicInfo], True)
         self.names_table = Names()
-        self.actors_table = BasicInfo()
+        self.basic_info = BasicInfo()
 
     def __del__(self):
         namedb.close()
