@@ -135,9 +135,17 @@ class BasicInfo(HasTraits):
 
     def save(self):
         db_mgr = DBManager()
-        db_mgr.basic_info.add_actor(name=self.character_name.get_name(), role=self.character_name.role,
-                                    gender=self.gender, country=self.country, birthday=self.birthday,
-                                    alias=self.alias, age=self.age)
+        name = self.character_name.get_name()
+        role = self.character_name.role
+        gender = self.gender
+        country = self.country
+        birthday = self.birthday
+        alias = self.alias
+        age = self.age
+        print('saving basicinfo with name: ' + name + ', role: ' + role + ', gender: ' + gender + ', country: ' +
+              country + ', dob: ' + birthday + ', alias: ' + alias + ', age: ' + str(age))
+        db_mgr.basic_info.add_actor(name=name, role=role, gender=gender, country=country, birthday=birthday,
+                                    alias=alias, age=age)
 
 
     def update_from_model(self):

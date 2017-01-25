@@ -58,8 +58,11 @@ class BasicInfo(Model):
     age = IntegerField()
 
     def add_actor(self, name, role, gender, country, birthday, alias, age):
+        if name is "":
+            print('save failed, no name')
+            return
         act = Actor.add_or_get(role=role, name=name)
-        print('birthday at save: ' + birthday)
+        # print('birthday at save: ' + birthday)
         actor, created = BasicInfo.get_or_create(actor=act,
                                                  defaults={'gender': gender,
                                                        'country': country,

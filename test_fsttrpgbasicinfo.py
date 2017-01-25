@@ -81,6 +81,11 @@ class TestTraits(unittest.TestCase):
         basic = BasicInfo()
         self.assertTrue(True)
 
+    def test_basic_info_save(self):
+        basic = BasicInfo()
+        basic.save()
+        self.assertTrue(True)
+
 
 if __name__ == '__main__':
     unittest.main()
