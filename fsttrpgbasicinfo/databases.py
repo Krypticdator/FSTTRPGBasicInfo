@@ -1,12 +1,26 @@
 from __future__ import print_function
 
+import os
+
 from fsttrpgcharloader.database import Actor, DBManager as ActorDBManager
 from peewee import Model, CharField, SqliteDatabase, IntegerField, ForeignKeyField
 
 import utilities
 
-namedb = SqliteDatabase('names.db')
-characterdb = SqliteDatabase('basic_info.db')
+
+def find_or_create(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            result = os.path.join(root, name)
+            print('found db in: ' + str(result))
+            return result
+    print('didnt find any db, creating new: ' + name)
+    return name
+
+
+current_dir = os.path.dirname(__file__)
+namedb = SqliteDatabase(find_or_create('names.db', current_dir))
+characterdb = SqliteDatabase(find_or_create('basic_info.db', current_dir))
 
 
 class Names(Model):

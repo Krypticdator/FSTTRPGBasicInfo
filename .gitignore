@@ -152,3 +152,5 @@ fsttrpgbasicinfo/actors.db
 fsttrpgbasicinfo/basic_info.db
 fsttrpgbasicinfo/filepaths.db
 names.db
+fsttrpgbasicinfo/traits/basic_info.db
+fsttrpgbasicinfo/traits/filepaths.db
