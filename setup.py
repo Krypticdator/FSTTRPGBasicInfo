@@ -2,8 +2,8 @@ from distutils.core import setup
 
 setup(
     name='FSTTRPGCharacterBasicInfo',
-    version='0.3.2',
-    packages=['fsttrpgbasicinfo', 'traitmvc'],
+    version='0.3.3',
+    packages=['fsttrpgbasicinfo', 'fsttrpgbasicinfo.traitmvc'],
     url='',
     license='',
     author='Toni Nurmi',
