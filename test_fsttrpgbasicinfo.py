@@ -4,7 +4,7 @@ import unittest
 import fsttrpgbasicinfo.utilities
 from fsttrpgbasicinfo.databases import DBManager
 from fsttrpgbasicinfo.models import Names, BasicInfo as ModelBasicInfo
-from fsttrpgbasicinfo.traitsmodels import ConfigureNames, BasicInfo
+from fsttrpgbasicinfo.traitmvc.models import BasicInfo
 
 
 class TestModel(unittest.TestCase):
@@ -72,10 +72,6 @@ class TestTraits(unittest.TestCase):
             os.remove('actors.db')
         except WindowsError as e:
             print('failed to delete: ' + str(e))
-
-    def test_configure_names(self):
-        con = ConfigureNames()
-        self.assertTrue(True)
 
     def test_basic_info(self):
         basic = BasicInfo()
