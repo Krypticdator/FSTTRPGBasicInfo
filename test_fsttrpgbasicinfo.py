@@ -15,7 +15,7 @@ class TestModel(unittest.TestCase):
         try:
             os.remove('names.db')
             os.remove('actors.db')
-        except WindowsError as e:
+        except Exception as e:
             print('failed to delete: ' + str(e))
 
     def test_load_names_aws_true_no_doubles(self):
@@ -48,7 +48,7 @@ class TestUtilities(unittest.TestCase):
         try:
             os.remove('names.db')
             os.remove('actors.db')
-        except WindowsError as e:
+        except Exception as e:
             print('failed to delete: ' + str(e))
 
     def test_upload(self):
@@ -70,7 +70,7 @@ class TestTraits(unittest.TestCase):
         try:
             os.remove('names.db')
             os.remove('actors.db')
-        except WindowsError as e:
+        except Exception as e:
             print('failed to delete: ' + str(e))
 
     def test_basic_info(self):
