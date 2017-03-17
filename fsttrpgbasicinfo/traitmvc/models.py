@@ -1,19 +1,20 @@
 from random import randint
 
 from fsttrpgcharloader.traitsmodels import CharacterName
+from fsttrpgtables.models import Table
 from traits.api import HasTraits, Instance, Enum, String, Range
 
 from fsttrpgbasicinfo.databases import DBManager
 from fsttrpgbasicinfo.models import Names
 from fsttrpgbasicinfo.utilities import random_birthday
 
-
+AGE_TABLE = Table('ages')
 class BasicInfo(HasTraits):
     character_name = Instance(CharacterName)
     country = Enum('us')
     alias = String
     gender = Enum('male', 'female')
-    age = Range(14, 80, mode='spinner')
+    age = Range(14, 100, mode='spinner')
     names = None
     birthday = String()
 
@@ -38,18 +39,30 @@ class BasicInfo(HasTraits):
             self.names = Names(self.country, self.configure_names.check_aws_for_names)
         self.alias = self.names.random_alias()
 
-    def random_age(self, random_min=2, random_max=25):
-        self.age = 14 + randint(random_min, random_max)
+    def random_age(self, random_min=2, random_max=25, use_3d6_table=False):
+        if use_3d6_table:
+            dice = sum([randint(1, 6), randint(1, 6), randint(1, 6)])
+            result = AGE_TABLE.get_result(index=dice)
+            array = result.split('-')
+            n1 = int(array[0])
+            n2 = int(array[1])
+            self.age = randint(n1, n2)
+        else:
+
+            self.age = 14 + randint(random_min, random_max)
 
     def random_dob(self):
         self.birthday = random_birthday()
 
-    def random_all(self):
-        random_gender = randint(1, 2)
-        if random_gender == 1:
-            self.gender = 'male'
+    def random_all(self, gender=None):
+        if gender is None:
+            random_gender = randint(1, 2)
+            if random_gender == 1:
+                self.gender = 'male'
+            else:
+                self.gender = 'female'
         else:
-            self.gender = 'female'
+            self.gender = gender
 
         self.random_age()
         self.random_name()
