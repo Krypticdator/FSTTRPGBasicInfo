@@ -154,3 +154,5 @@ fsttrpgbasicinfo/filepaths.db
 names.db
 fsttrpgbasicinfo/traits/basic_info.db
 fsttrpgbasicinfo/traits/filepaths.db
+
+fsttrpgbasicinfo/traitmvc/fuziontables.db
