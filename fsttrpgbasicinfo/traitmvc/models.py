@@ -39,6 +39,16 @@ class BasicInfo(HasTraits):
             self.names = Names(self.country, self.configure_names.check_aws_for_names)
         self.alias = self.names.random_alias()
 
+    def set_last_name(self, surname):
+        name = self.character_name.get_name()
+
+        array = name.split(' ')
+        new_name = array[0] + ' ' + surname
+        self.character_name.set_name(new_name)
+
+
+
+
     def random_age(self, random_min=2, random_max=25, use_3d6_table=False):
         if use_3d6_table:
             dice = sum([randint(1, 6), randint(1, 6), randint(1, 6)])
