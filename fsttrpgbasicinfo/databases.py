@@ -70,9 +70,10 @@ class BasicInfo(Model):
     birthday = CharField()
     alias = CharField()
     age = IntegerField()
+    status = CharField()
 
     @staticmethod
-    def add_actor(name, role, gender, country, birthday, alias, age):
+    def add_actor(name, role, gender, country, birthday, alias, age, status='alive'):
         if name is "":
             print('save failed, no name')
             return
@@ -83,7 +84,8 @@ class BasicInfo(Model):
                                                        'country': country,
                                                        'birthday': birthday,
                                                        'alias': alias,
-                                                       'age': int(age)})
+                                                           'age': int(age),
+                                                           'status': status})
         if created:
             print('added new character to BasicInfo database')
             return None
