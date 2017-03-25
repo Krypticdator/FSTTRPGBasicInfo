@@ -71,7 +71,8 @@ class BasicInfo(Model):
     alias = CharField()
     age = IntegerField()
 
-    def add_actor(self, name, role, gender, country, birthday, alias, age):
+    @staticmethod
+    def add_actor(name, role, gender, country, birthday, alias, age):
         if name is "":
             print('save failed, no name')
             return
@@ -89,7 +90,8 @@ class BasicInfo(Model):
         else:
             return actor
 
-    def get_basic_info(self, name, role):
+    @staticmethod
+    def get_basic_info(name, role):
         act = Actor.get(Actor.name == name, Actor.role == role)
         bi = BasicInfo.get(BasicInfo.actor == act)
         print('birthday at load: ' + bi.birthday)
